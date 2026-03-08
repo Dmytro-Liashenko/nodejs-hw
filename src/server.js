@@ -3,6 +3,7 @@ import express from 'express';
 import cors from 'cors';
 import 'dotenv/config';
 import { connectMongoDB } from './db/connectMongoDB.js';
+import { isCelebrateError } from 'celebrate';
 import { errorHandler } from './middleware/errorHandler.js';
 import { logger } from './middleware/logger.js';
 import { notFoundHandler } from './middleware/notFoundHandler.js';
@@ -30,6 +31,20 @@ app.use(noteRouter);
 
 
 app.use(notFoundHandler);
+
+app.use((err, req, res, next) => {
+  if (isCelebrateError(err)) {
+    const errorBody =
+      err.details.get("body") ||
+      err.details.get("query") ||
+      err.details.get("params");
+    return res.status(400).json({
+      status: 400,
+      message: errorBody.message,
+    });
+  }
+  next(err);
+});
 
 // Middleware для обробки помилок
 app.use(errorHandler);
