@@ -8,6 +8,8 @@ import { errorHandler } from './middleware/errorHandler.js';
 import { logger } from './middleware/logger.js';
 import { notFoundHandler } from './middleware/notFoundHandler.js';
 import noteRouter from "./routes/notesRoutes.js";
+import authRouter from "./routes/authRoutes.js";
+import cookieParser from 'cookie-parser';
 
 const app = express();
 const PORT = process.env.PORT ?? 3000;
@@ -15,10 +17,15 @@ const PORT = process.env.PORT ?? 3000;
 
 app.use(express.json());
 app.use(cors());
+app.use(cookieParser());
 app.use(logger);
+
+
 app.get("/ping", (req, res) => {
   res.json({ message: "pong" });
 });
+
+app.use(authRouter);
 app.use(noteRouter);
 
 // app.get('/notes', (req, res) => {
