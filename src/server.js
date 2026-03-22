@@ -9,6 +9,7 @@ import { logger } from './middleware/logger.js';
 import { notFoundHandler } from './middleware/notFoundHandler.js';
 import noteRouter from "./routes/notesRoutes.js";
 import authRouter from "./routes/authRoutes.js";
+import userRouter from "./routes/userRoutes.js";
 import cookieParser from 'cookie-parser';
 
 const app = express();
@@ -27,6 +28,7 @@ app.get("/ping", (req, res) => {
 
 app.use(authRouter);
 app.use(noteRouter);
+app.use(userRouter);
 
 // app.get('/notes', (req, res) => {
 //   res.status(200).json({  message: "Retrieved all notes"  });
